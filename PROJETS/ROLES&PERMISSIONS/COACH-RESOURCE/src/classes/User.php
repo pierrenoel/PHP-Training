@@ -60,6 +60,10 @@ class User
         $this->name = $name;
         return $this;
     }
+
+    /**
+     * @return Role
+     */
     public function getRole() : Role
     {
         return $this->role;

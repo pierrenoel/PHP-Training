@@ -24,6 +24,6 @@ $user = new User('Pierre','pierrenoel@hotmail.be','password');
 
 foreach($user->getRole()->getPermissions() as $permission)
 {
-    echo $permission->getName() . ' ';
+    echo $permission->getName() . ' index.php';
 }
 
