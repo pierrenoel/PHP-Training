@@ -1,0 +1,15 @@
+{
+    "name": "becode/poo-pratice",
+    "autoload": {
+        "psr-4": {
+            "app\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "pierrenoel",
+            "email": "pierrenoel1509@gmail.com"
+        }
+    ],
+    "require": {}
+}
