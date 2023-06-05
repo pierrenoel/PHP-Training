@@ -4,7 +4,6 @@ namespace app\classes;
 
 class User
 {
-
     public function __construct(
         protected string $name,
         protected string $email,
@@ -18,7 +17,7 @@ class User
     {
         return $this->name;
     }
-    
+
     /**
      * @param string $name
      * @return $this
@@ -52,8 +51,13 @@ class User
      */
     public function register() : self
     {
+        // TODO: Validate the data (you can use an DI)
+
+        // TODO: Record the user into the database
+
         // Send a welcome email
         $this->emailSender->sendEmail($this->email, $this->emailSender->getHeader()['subject'],$this->emailSender->getHeader()['message']);
+
         return $this;
     }
 

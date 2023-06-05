@@ -21,7 +21,7 @@ class EmailSender implements EmailSenderInterface
     /**
      * @param array $header
      */
-    public function setEmail(array $header): void
+    public function setHeader(array $header): void
     {
         $this->header = $header;
     }
@@ -36,5 +36,6 @@ class EmailSender implements EmailSenderInterface
     {
         // TODO: Implement sendEmail() method.
         // You can use the mail() method or implement a mail package like PHPMailer, ...
+        echo 'The email is sent';
     }
 }

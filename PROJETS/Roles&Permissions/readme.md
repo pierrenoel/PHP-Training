@@ -1,4 +1,4 @@
-# Introduction : little exercise - one
+# Roles & Permissions
 
 Your CTO asks you to develop a roles / permissions system for the project. 
 
@@ -69,4 +69,4 @@ It is a very easy one but if you want to go further, please ... But what I sugge
 add a role by default to the user (e.g. add a default Member role when a new object is
 instantiate from its class ). And for the second thing you can add, is to create an 
 interface (including an auth system) and moreover, an email system when a new user
-is registered (see the next **little exercise - one**)
+is registered (User-Registration)
