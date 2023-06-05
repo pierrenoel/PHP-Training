@@ -1,4 +1,4 @@
-# Introduction (little exercise 1)
+# Introduction : little exercise - one
 
 Your CTO asks you to develop a roles / permissions system for the project. 
 
@@ -63,3 +63,10 @@ class Admin extends Role
     protected string $name = "Admin";
 }
 ```
+
+## What next?
+It is a very easy one but if you want to go further, please ... But what I suggest is to 
+add a role by default to the user (e.g. add a default Member role when a new object is
+instantiate from its class ). And for the second thing you can add, is to create an 
+interface (including an auth system) and moreover, an email system when a new user
+is registered (see the next **little exercise - one**)

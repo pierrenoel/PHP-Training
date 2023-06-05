@@ -1,5 +1,5 @@
 {
-    "name": "becode/poo-pratice",
+    "name": "becode/coach-resource",
     "autoload": {
         "psr-4": {
             "app\\": "src/"
