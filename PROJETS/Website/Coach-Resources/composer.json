@@ -1,0 +1,8 @@
+{
+    "name": "becode/coach-resources",
+    "autoload": {
+        "psr-4": {
+            "app\\": "src/"
+        }
+    }
+}

@@ -42,7 +42,7 @@ class MyClass implements MyInterface
 
 class MyClass implements MyInterface1, MyInterface2, MyInterface3
 {
-    // Here are the methods define in the interfaces
+    // Here are the methods define in the Interfaces
 }
 
 ```
