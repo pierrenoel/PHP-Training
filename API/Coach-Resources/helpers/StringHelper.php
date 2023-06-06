@@ -17,7 +17,7 @@ class StringHelper
         $className = self::toLowerCase($className[2]);
 
         // 3. to plural
-       return self::plural($className);
+        return self::plural($className);
     }
 
     private static function toLowerCase(string $str): string

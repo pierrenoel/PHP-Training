@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Post;
 use app\repository\PostRepository;
 
 class PostController extends Controller
@@ -31,5 +32,22 @@ class PostController extends Controller
     public function show(int $id): void
     {
         echo $this->ToJson($this->postRepository->show($id));
+    }
+
+    /**
+     * @param array $request
+     * @return $this
+     */
+    public function create(array $request)
+    {
+
+        $post = new Post();
+
+        $post->setTitle($request['title']);
+        $post->setExcerpt($request['excerpt']);
+        $post->setBody($request['body']);
+
+        $this->postRepository->save($post);
+
     }
 }

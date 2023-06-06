@@ -4,8 +4,8 @@ namespace app\controllers;
 
 class ErrorController extends Controller
 {
-    public function error_404()
+    public function error_404(): bool|int
     {
-        http_send_status(404);
+        return http_response_code(404);
     }
 }

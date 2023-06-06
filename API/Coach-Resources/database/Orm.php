@@ -1,6 +1,10 @@
 <?php
 
 namespace app\database;
+
+use app\helpers\Validation;
+use app\models\Post;
+
 abstract class Orm
 {
     /**
@@ -23,6 +27,11 @@ abstract class Orm
     public function show(int $id): bool|array
     {
         return $this->query('select * from '. $this->table . ' where id = ' .$id);
+    }
+
+    public function save(Object $object)
+    {
+       var_dump(get_class_methods($object));
     }
 
     /**

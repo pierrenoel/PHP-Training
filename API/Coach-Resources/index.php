@@ -7,14 +7,18 @@ Note about the router: make an easy router, not necessarily difficult one
 */
 
 
-$uri =  $_SERVER['REQUEST_URI'];
+$uri =  explode('/',$_SERVER['REQUEST_URI']);
+$request_method = $_SERVER['REQUEST_METHOD'];
 
-switch ($uri)
+// /posts
+if($uri[1] == 'posts')
+    if($request_method == "GET") (new \app\controllers\PostController())->index();
+
+// post/1
+if($uri[1] == 'post' && !empty($uri[2]))
+    if($request_method == "GET") (new \app\controllers\PostController())->show($uri[2]);
+
+if($uri[1] == 'add-post')
 {
-    case '/posts' :
-        (new \app\controllers\PostController())->index();
-        break;
-    case '/post':
-        (new \app\controllers\PostController())->show(1);
-        break;
+    if($request_method == "POST") (new \app\controllers\PostController())->create($_POST);
 }
