@@ -11,11 +11,17 @@ abstract class Decorator implements WebsiteInterface
         $this->website = $website;
     }
 
+    /**
+     * @return int
+     */
     public function getPrice(): int
     {
         return $this->website->getPrice();
     }
 
+    /**
+     * @return string
+     */
     public function getDescription(): string
     {
         return $this->website->getDescription();
