@@ -2,12 +2,12 @@
 
 namespace app\helpers;
 
-class Validation
+class ValidationHelper
 {
     public static function required(array $array)
     {
 
-        // todo
+
 
     }
 }

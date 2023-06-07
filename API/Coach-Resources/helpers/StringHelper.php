@@ -6,7 +6,7 @@ class StringHelper
 {
     /**
      * @param Object $className
-     * @return array
+     * @return string
      */
     public static function getClassName(Object $className): string
     {
@@ -14,15 +14,21 @@ class StringHelper
         $className = explode('\\',$className::class);
 
         // 2. to lower case
-        $className = self::toLowerCase($className[2]);
+        $className = strtolower($className[2]);
 
         // 3. to plural
         return self::plural($className);
     }
 
-    private static function toLowerCase(string $str): string
+    public static function addColonToFrontOfWords(string $string) : string
     {
-        return strtolower($str);
+        $words = explode(",", $string);
+
+        $modifiedWords = array_map(function($word) {
+            return ":" . $word;
+        }, $words);
+
+        return implode(",", $modifiedWords);
     }
 
     private static function plural(String $str): string
@@ -30,4 +36,5 @@ class StringHelper
         // TODO: Implement a real function singular to plural
         return $str.'s';
     }
+
 }

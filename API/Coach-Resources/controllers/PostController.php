@@ -40,14 +40,15 @@ class PostController extends Controller
      */
     public function create(array $request)
     {
-
         $post = new Post();
 
         $post->setTitle($request['title']);
         $post->setExcerpt($request['excerpt']);
         $post->setBody($request['body']);
 
-        $this->postRepository->save($post);
+        // Validation
 
+
+        $this->postRepository->save($post);
     }
 }

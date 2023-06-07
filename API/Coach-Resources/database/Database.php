@@ -40,4 +40,13 @@ class Database
     {
         return $this->PDOInstance->query($query);
     }
+
+    /**
+     * @param string $query
+     * @return bool|\PDOStatement
+     */
+    public function prepare(string $query): bool|\PDOStatement
+    {
+        return $this->PDOInstance->prepare($query);
+    }
 }
