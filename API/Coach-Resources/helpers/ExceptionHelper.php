@@ -7,13 +7,12 @@ class ExceptionHelper
     /**
      * @param mixed $mixed
      * @param $string
-     * @return self
+     * @return void
      * @throws \Exception
      */
-    private static function ExceptionMessage(mixed $mixed, $string): self
+    private static function ExceptionMessage(mixed $mixed, $string): void
     {
         if(empty($mixed)) throw new \Exception($string);
-        return new self;
     }
 
     /**
@@ -21,15 +20,17 @@ class ExceptionHelper
      * @param string $message
      * @return mixed
      */
-    public static function TryAndCatch(mixed $mixed, string $message): mixed
+    public static function TryAndCatch(mixed $mixed, string $message, int $status = null): mixed
     {
         try {
             self::ExceptionMessage($mixed,$message);
             return $mixed;
         }catch(\Exception $e)
         {
-            http_response_code(404);
-            echo $e->getMessage();
+            empty($status)
+                ? http_response_code(404)
+                : http_response_code($status);
+            echo json_encode($e->getMessage());
         }
 
         return new self;

@@ -2,9 +2,9 @@
 
 namespace app\repository;
 
-use app\database\Orm;
+use app\database\ORM;
 
-class PostRepository extends Orm
+class PostRepository extends ORM
 {
     /**
      * @var string

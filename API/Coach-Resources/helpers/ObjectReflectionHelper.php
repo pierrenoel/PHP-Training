@@ -33,15 +33,19 @@ class ObjectReflectionHelper
         $postArray = [];
 
         foreach ($properties as $property) {
+
             $propertyName = $property->getName();
+
             $getterMethod = "get" . ucfirst($propertyName);
+
             if (method_exists($object, $getterMethod)) {
+
                 $propertyValue = $object->$getterMethod();
+
                 $postArray[$propertyName] = $propertyValue;
             }
         }
 
         return $postArray;
-
     }
 }

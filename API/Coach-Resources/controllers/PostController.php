@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\helpers\ValidationHelper;
 use app\models\Post;
 use app\repository\PostRepository;
 
@@ -31,14 +32,14 @@ class PostController extends Controller
      */
     public function show(int $id): void
     {
-        echo $this->ToJson($this->postRepository->show($id));
+        echo $this->ToJson($this->postRepository->find($id));
     }
 
     /**
      * @param array $request
-     * @return $this
+     * @return self
      */
-    public function create(array $request)
+    public function create(array $request) : self
     {
         $post = new Post();
 
@@ -47,8 +48,36 @@ class PostController extends Controller
         $post->setBody($request['body']);
 
         // Validation
+        $validationHelper = new ValidationHelper($request);
 
+        $validationHelper->required([
+            'title' => 'The title is required',
+            'excerpt' => 'The excerpt is required',
+            'body' => 'The body is required'
+        ]);
 
-        $this->postRepository->save($post);
+        $validationHelper->min([
+            'title' => 'The title requires at least 5 characters'
+        ],5);
+
+        if($validationHelper->validate()) $this->postRepository->save($post);
+
+        echo $this->toJson(['message' => 'Post added']);
+
+        return $this;
+    }
+
+    /**
+     * @param int $id
+     * @return $this
+     */
+    public function destroy(int $id) : self
+    {
+        // Destroy the post
+        $post = $this->postRepository->delete($id);
+
+        if($post) echo $this->toJson(['message' => 'Post delete']);
+
+        return $this;
     }
 }
