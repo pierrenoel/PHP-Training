@@ -20,6 +20,16 @@ class ComposerStaticInit5d6eca44e0c3a852928f4d429e56c0da
         ),
     );
 
+    public static $prefixesPsr0 = array (
+        'P' => 
+        array (
+            'Pierre\\Router\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/pierre/router/src',
+            ),
+        ),
+    );
+
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
     );
@@ -29,6 +39,7 @@ class ComposerStaticInit5d6eca44e0c3a852928f4d429e56c0da
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit5d6eca44e0c3a852928f4d429e56c0da::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit5d6eca44e0c3a852928f4d429e56c0da::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit5d6eca44e0c3a852928f4d429e56c0da::$prefixesPsr0;
             $loader->classMap = ComposerStaticInit5d6eca44e0c3a852928f4d429e56c0da::$classMap;
 
         }, null, ClassLoader::class);

@@ -6,4 +6,5 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Pierre\\Router\\' => array($vendorDir . '/pierre/router/src'),
 );

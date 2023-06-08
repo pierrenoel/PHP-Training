@@ -1,0 +1,53 @@
+{
+    "packages": [
+        {
+            "name": "pierre/router",
+            "version": "1.1.2",
+            "version_normalized": "1.1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pierrenoel/router.git",
+                "reference": "31226a9d6d77de0384af63db3429f2334a8d3dfa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pierrenoel/router/zipball/31226a9d6d77de0384af63db3429f2334a8d3dfa",
+                "reference": "31226a9d6d77de0384af63db3429f2334a8d3dfa",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0.0"
+            },
+            "time": "2023-02-28T10:56:12+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-0": {
+                    "Pierre\\Router\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Pierre",
+                    "email": "pierrenoel@hotmail.be"
+                }
+            ],
+            "description": "A router package for your project",
+            "keywords": [
+                "router",
+                "routing"
+            ],
+            "support": {
+                "issues": "https://github.com/pierrenoel/router/issues",
+                "source": "https://github.com/pierrenoel/router/tree/1.1.2"
+            },
+            "install-path": "../pierre/router"
+        }
+    ],
+    "dev": true,
+    "dev-package-names": []
+}

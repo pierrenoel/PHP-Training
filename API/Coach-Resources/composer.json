@@ -11,5 +11,7 @@
             "email": "pierrenoel1509@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "pierre/router": "^1.1"
+    }
 }

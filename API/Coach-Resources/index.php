@@ -2,10 +2,20 @@
 
 require_once './vendor/autoload.php';
 
-/*
-Note about the router: make an easy router, not necessarily difficult one
-*/
+$router = new \Pierre\Router\Router();
 
+$router->get('/posts', function() {
+    (new \app\controllers\PostController())->index();
+});
+
+$router->get('/post/:id', function($id) {
+    (new \app\controllers\PostController())->show($id);
+});
+
+
+$router->run();
+
+/*
 
 $uri =  explode('/',$_SERVER['REQUEST_URI']);
 $request_method = $_SERVER['REQUEST_METHOD'];
@@ -28,3 +38,5 @@ if($uri[1] == 'delete' && !empty($uri[2]))
 {
     if($request_method == "GET") (new \app\controllers\PostController())->destroy($uri[2]);
 }
+
+*/
