@@ -18,12 +18,8 @@ abstract class ORM
      */
     public function findAll() : mixed
     {
-
-        // TODO: Transform that into a prepared statement
-
         $query =  $this->query('SELECT * FROM '. $this->table);
 
-        // Check if the query is not empty, if empty => throw new error message with a 404 status
         return ExceptionHelper::TryAndCatch($query,'Oops, something is wrong!');
     }
 
@@ -33,10 +29,13 @@ abstract class ORM
      */
     public function find(int $id): mixed
     {
-        $query =  $this->query('SELECT * FROM '. $this->table . ' where id = ' .$id);
+        $stmt = Database::getInstance()->prepare('SELECT * FROM '. $this->table . ' where id = :id');
+        $stmt->bindValue(':id',$id);
+        $stmt->execute();
 
-        // Check if the query is not empty, if empty => throw new error message with a 404 status
-        return ExceptionHelper::TryAndCatch($query,'Oops, something is wrong!');
+        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        return ExceptionHelper::TryAndCatch($result,'Oops, something is wrong!');
     }
 
     /**
@@ -45,9 +44,6 @@ abstract class ORM
      */
     public function save(object $object): mixed
     {
-
-        // TODO: To improve this method
-
         // ARRAY
         $getMethodNames = ObjectReflectionHelper::getGetterMethodNames($object);
 
@@ -61,7 +57,7 @@ abstract class ORM
         $getProtectedProperties = ObjectReflectionHelper::getProtectedProperties($object);
 
         // QUERY
-        $stmt = $this->prepare("INSERT INTO $this->table ($getMethodNamesString) VALUES ($getMethodNamesStringColon)");
+        $stmt = Database::getInstance()->prepare("INSERT INTO $this->table ($getMethodNamesString) VALUES ($getMethodNamesStringColon)");
 
         // ARRAY LOOP
         foreach($getMethodNames as $value)
@@ -76,7 +72,12 @@ abstract class ORM
 
     public function delete(int $id) : bool
     {
-        $current_id = $this->find($id);
+
+        $stmt = Database::getInstance()->prepare('SELECT * FROM '. $this->table . ' where id = :id');
+        $stmt->bindValue(':id',$id);
+        $stmt->execute();
+
+        $current_id = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
         if(!empty($current_id))  $query =  $this->query('DELETE FROM '. $this->table . ' where id = ' .$id);
         else return ExceptionHelper::TryAndCatch($current_id,'Oops, something is wrong!');
@@ -92,10 +93,5 @@ abstract class ORM
     {
         $database = Database::getInstance()->query($query);
         return $database->fetchAll(\PDO::FETCH_ASSOC);
-    }
-
-    private function prepare(string $query): bool|\PDOStatement
-    {
-        return Database::getInstance()->prepare($query);
     }
 }
