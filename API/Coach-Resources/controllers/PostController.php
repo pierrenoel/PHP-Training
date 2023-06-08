@@ -69,6 +69,15 @@ class PostController extends Controller
         return $this;
     }
 
+    public function edit(int $id, array $post): void
+    {
+        // Find the post by ID
+        $existingPost = $this->postRepository->find($id);
+
+        var_dump($existingPost->getTitle);
+    }
+
+
     /**
      * @param int $id
      * @return $this

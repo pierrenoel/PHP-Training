@@ -33,7 +33,7 @@ abstract class ORM
         $stmt->bindValue(':id',$id);
         $stmt->execute();
 
-        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
 
         return ExceptionHelper::TryAndCatch($result,'Oops, something is wrong!');
     }
@@ -88,6 +88,7 @@ abstract class ORM
 
         return true;
     }
+
 
     /**
      * @param string $query

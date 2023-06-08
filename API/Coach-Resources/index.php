@@ -16,6 +16,10 @@ $router->post('/post/add',function(){
     (new \app\controllers\PostController())->create($_POST);
 });
 
+$router->post('/post/edit/:id',function($id){
+    (new \app\controllers\PostController())->edit($id,$_POST);
+});
+
 $router->delete('/post/delete/:id',function ($id){
     (new \app\controllers\PostController())->destroy($id);
 });
