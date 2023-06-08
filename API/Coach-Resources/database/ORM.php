@@ -70,6 +70,10 @@ abstract class ORM
         return ExceptionHelper::TryAndCatch($result,'Oops, something is wrong!');
     }
 
+    /**
+     * @param int $id
+     * @return bool
+     */
     public function delete(int $id) : bool
     {
 

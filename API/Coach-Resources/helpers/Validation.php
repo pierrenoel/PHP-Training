@@ -1,6 +1,6 @@
 <?php
 
-namespace app\helpers\validation;
+namespace app\helpers;
 
 class Validation
 {
@@ -46,7 +46,7 @@ class Validation
      * @param callable $condition
      * @return $this
      */
-    public function checkConditions(array $array, callable $condition) : self
+    private function checkConditions(array $array, callable $condition) : self
     {
         foreach ($this->request as $key => $value) {
 

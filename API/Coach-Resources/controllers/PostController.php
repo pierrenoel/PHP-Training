@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-use app\helpers\ValidationHelper;
+use app\helpers\Validation;
 use app\models\Post;
 use app\repository\PostRepository;
 
@@ -48,7 +48,7 @@ class PostController extends Controller
         $post->setBody($request['body']);
 
         // Validation
-        $validationHelper = new ValidationHelper($request);
+        $validationHelper = new Validation($request);
 
         $validationHelper->required([
             'title' => 'The title is required',
@@ -60,9 +60,11 @@ class PostController extends Controller
             'title' => 'The title requires at least 5 characters'
         ],5);
 
-        if($validationHelper->validate()) $this->postRepository->save($post);
-
-        echo $this->toJson(['message' => 'Post added']);
+        if($validationHelper->validate())
+        {
+            $this->postRepository->save($post);
+            echo $this->toJson(['message' => 'Post added']);
+        }
 
         return $this;
     }
