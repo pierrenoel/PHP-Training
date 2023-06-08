@@ -1,8 +1,8 @@
 <?php
 
-namespace app\helpers;
+namespace app\helpers\validation;
 
-class ValidationHelper
+class Validation
 {
     /**
      * @var array
