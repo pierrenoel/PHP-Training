@@ -21,7 +21,37 @@ class CreateModelCommand extends Command
     {
 
         // TODO: Generate automatically models of the app
+        // Init the helper
+        $helper = $this->getHelper("question");
+
+        // Questions
+        $question = new Question('What is the name of the field : ');
+
+        // Show the question
+        $one = $helper->ask($input,$output,$question);
+
+        // Create the file
+        touch('models/'.$input->getArgument('name').'.php');
+
+        // Create an array
+        $array = [$one];
+
+        // Write in this file
+        $this->writeIntoTheFile('models/'.$input->getArgument('name').'.php',$input->getArgument('name'));
 
         return Command::SUCCESS;
+    }
+
+    private function writeIntoTheFile(string $path, string $filename)
+    {
+        $file = fopen($path, 'w');
+        $content = "<?php namespace app\models;" . PHP_EOL . PHP_EOL . "class $filename {" . PHP_EOL . PHP_EOL . "}";
+        fwrite($file, $content);
+        fclose($file);
+    }
+
+    private function access(array $data)
+    {
+
     }
 }

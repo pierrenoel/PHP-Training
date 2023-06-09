@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-use app\helpers\ExceptionHelper;
+use Symfony\Component\HttpFoundation\Response;
 
 class Controller
 {

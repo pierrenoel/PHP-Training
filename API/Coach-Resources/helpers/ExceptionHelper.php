@@ -4,23 +4,13 @@ namespace app\helpers;
 
 class ExceptionHelper
 {
-    /**
-     * @param mixed $mixed
-     * @param $string
-     * @return void
-     * @throws \Exception
-     */
-    private static function ExceptionMessage(mixed $mixed, $string): void
+
+    private static function ExceptionMessage(mixed $mixed, string $string): void
     {
         if(empty($mixed)) throw new \Exception($string);
     }
 
-    /**
-     * @param mixed $mixed
-     * @param string $message
-     * @return mixed
-     */
-    public static function TryAndCatch(mixed $mixed, string $message, int $status = null): mixed
+     public static function TryAndCatch(mixed $mixed, string $message, int $status = null): mixed
     {
         try {
             self::ExceptionMessage($mixed,$message);
