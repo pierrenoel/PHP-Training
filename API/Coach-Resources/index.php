@@ -2,7 +2,9 @@
 
 require_once './vendor/autoload.php';
 
-$router = new \Pierre\Router\Router();
+use \Pierre\Router\Router;
+
+$router = new Router();
 
 $router->get('/posts', function() {
     (new \app\controllers\PostController())->index();
@@ -25,3 +27,5 @@ $router->delete('/post/delete/:id',function ($id){
 });
 
 $router->run();
+
+

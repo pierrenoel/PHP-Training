@@ -23,7 +23,7 @@ The Router PHP package requires PHP 7.0 or higher.
 To use the Router PHP package, you need to install it via Composer. Run the following command in your project directory:
 
 ```bash 
-composer require pierre/router
+composer require pierre/1.router
 ```
 
 ## Usage

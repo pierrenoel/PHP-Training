@@ -68,7 +68,7 @@ class Router
     }
 
     /**
-     * Runs the router.
+     * Runs the 1.router.
     */
     public function run() : void
     {
