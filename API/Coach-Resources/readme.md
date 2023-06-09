@@ -21,6 +21,6 @@ Available commands:
   help        Display help for a command
   list        List commands
  make
-  make:model  
+  make:model  Generate a new model
 
 ```

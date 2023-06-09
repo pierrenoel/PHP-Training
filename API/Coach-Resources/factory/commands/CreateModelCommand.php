@@ -9,7 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Question\Question;
 
-#[AsCommand(name: 'make:model')]
+#[AsCommand(name: 'make:model',description: 'Generate a new model')]
 class CreateModelCommand extends Command
 {
     protected function configure() : void
