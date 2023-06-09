@@ -2,7 +2,7 @@
 
 ## Factory console
 
-```
+```bash
 php factory/Console
 
 Usage:
