@@ -15,7 +15,7 @@ class CreateModelCommand extends Command
 {
     protected function configure() : void
     {
-        $this->addArgument('name',InputArgument::REQUIRED, 'The username of the user.');
+        $this->addArgument('name',InputArgument::REQUIRED, 'The name of the model.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -69,7 +69,7 @@ class CreateModelCommand extends Command
     }
 
 
-    private function repository(string $path, string $filename)
+    private function repository(string $path, string $filename): void
     {
         $content = "";
 

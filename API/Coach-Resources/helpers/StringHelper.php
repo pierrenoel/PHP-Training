@@ -31,10 +31,13 @@ class StringHelper
         return implode(",", $modifiedWords);
     }
 
-    public static function plural(String $str): string
+    public static function plural(string $str): string
     {
         // TODO: Implement a real function singular to plural
         return $str.'s';
     }
-
+    public static function singular(string $str) : string
+    {
+        return rtrim($str,'s');
+    }
 }

@@ -3,8 +3,12 @@
 require_once './vendor/autoload.php';
 
 use \Pierre\Router\Router;
+use \Symfony\Component\HttpFoundation\Request;
 
+$request = Request::createFromGlobals();
 $router = new Router();
+
+// Router
 
 $router->get('/posts', function() {
     (new \app\controllers\PostController())->index();
@@ -18,8 +22,8 @@ $router->post('/post/add',function(){
     (new \app\controllers\PostController())->create($_POST);
 });
 
-$router->post('/post/edit/:id',function($id){
-    (new \app\controllers\PostController())->edit($id,$_POST);
+$router->post('/post/edit/:id',function($id) use ($request){
+    (new \app\controllers\PostController())->edit($id,$request);
 });
 
 $router->delete('/post/delete/:id',function ($id){
@@ -27,5 +31,6 @@ $router->delete('/post/delete/:id',function ($id){
 });
 
 $router->run();
+
 
 

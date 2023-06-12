@@ -5,10 +5,12 @@ require __DIR__.'/../vendor/autoload.php';
 
 use Symfony\Component\Console\Application;
 use app\factory\commands\CreateModelCommand;
+use \app\factory\commands\CreateControllerCommand;
 
 $application = new Application();
 
 // ... register commands
 $application->add(new CreateModelCommand());
+$application->add(new CreateControllerCommand());
 
 $application->run();

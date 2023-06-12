@@ -18,23 +18,22 @@ abstract class ORM
      */
     public function findAll() : mixed
     {
-        $query =  $this->query('SELECT * FROM '. $this->table);
-
-        return ExceptionHelper::TryAndCatch($query,'Oops, something is wrong!');
+        $query = $this->query('SELECT * FROM ' . $this->table);
+        return ExceptionHelper::TryAndCatch($query, 'Oops, something went wrong!');
     }
 
     /**
      * @param int $id
      * @return mixed
      */
-    public function find(int $id): mixed
+    public function find(int $id): ?array
     {
+
         $stmt = Database::getInstance()->prepare('SELECT * FROM '. $this->table . ' where id = :id');
         $stmt->bindValue(':id',$id);
         $stmt->execute();
 
         $result = $stmt->fetch(\PDO::FETCH_ASSOC);
-
         return ExceptionHelper::TryAndCatch($result,'Oops, something is wrong!');
     }
 
@@ -42,27 +41,53 @@ abstract class ORM
      * @param Object $object
      * @return mixed
      */
-    public function save(object $object): mixed
+    public function save(object $object): ?array
     {
-        // ARRAY
         $getMethodNames = ObjectReflectionHelper::getGetterMethodNames($object);
-
-        // STRING
-        $getMethodNamesString = implode(',',$getMethodNames);
-
-        // STRING WITH COLON
+        $getMethodNamesString = implode(',', $getMethodNames);
         $getMethodNamesStringColon = StringHelper::addColonToFrontOfWords($getMethodNamesString);
-
-        // ARRAY
         $getProtectedProperties = ObjectReflectionHelper::getProtectedProperties($object);
 
-        // QUERY
         $stmt = Database::getInstance()->prepare("INSERT INTO $this->table ($getMethodNamesString) VALUES ($getMethodNamesStringColon)");
 
-        // ARRAY LOOP
+        foreach ($getMethodNames as $value) {
+            $stmt->bindValue(":$value", $getProtectedProperties[$value]);
+        }
+
+        $result = $stmt->execute();
+        return ExceptionHelper::TryAndCatch($result, 'Oops, something went wrong!');
+    }
+
+    public function update(array $existing, array $request)
+    {
+        $array = [];
+        $str = "";
+
+        foreach($request as $key => $value)
+        {
+            empty($value) ? $array[$key] = $existing[$key] : $array[$key] = $value;
+        }
+
+        $singular = StringHelper::singular($this->table);
+        $final = ucfirst($singular);
+        $modelClass = "\\app\\models\\" . $final;
+
+        $getMethodNames = ObjectReflectionHelper::getGetterMethodNames(new $modelClass());
+
+        // construct the query like name=:name, title=:title, ...
         foreach($getMethodNames as $value)
         {
-            $stmt->bindValue(":$value",$getProtectedProperties[$value]);
+            $str .= $value.'=:'.$value.',';
+        }
+
+        $str = substr_replace($str ,"", -1);
+
+        // Making the sql
+        $stmt = Database::getInstance()->prepare('UPDATE '.$this->table . ' SET ' . $str .' WHERE id='. $existing["id"]);
+
+        foreach($getMethodNames as $value)
+        {
+            $stmt->bindValue(":$value",$array[$value]);
         }
 
         $result = $stmt->execute();
@@ -74,19 +99,21 @@ abstract class ORM
      * @param int $id
      * @return bool
      */
-    public function delete(int $id) : bool
+    public function delete(int $id) : void
     {
-
-        $stmt = Database::getInstance()->prepare('SELECT * FROM '. $this->table . ' where id = :id');
-        $stmt->bindValue(':id',$id);
+        $stmt = Database::getInstance()->prepare('SELECT * FROM ' . $this->table . ' WHERE id = :id');
+        $stmt->bindValue(':id', $id);
         $stmt->execute();
 
-        $current_id = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $rowCount = $stmt->rowCount();
 
-        if(!empty($current_id))  $query =  $this->query('DELETE FROM '. $this->table . ' where id = ' .$id);
-        else return ExceptionHelper::TryAndCatch($current_id,'Oops, something is wrong!');
+        if ($rowCount === 0) {
+            ExceptionHelper::TryAndCatch($rowCount,'Oops, something is wrong!');
+        }
 
-        return true;
+        $deleteStmt = Database::getInstance()->prepare('DELETE FROM ' . $this->table . ' WHERE id = :id');
+        $deleteStmt->bindValue(':id', $id);
+        $deleteStmt->execute();
     }
 
 

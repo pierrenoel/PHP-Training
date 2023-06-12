@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\helpers\Validation;
 use app\models\Post;
 use app\repositories\PostRepository;
+use Symfony\Component\HttpFoundation\Request;
 
 class PostController extends Controller
 {
@@ -37,9 +38,9 @@ class PostController extends Controller
 
     /**
      * @param array $request
-     * @return self
+     * @return void
      */
-    public function create(array $request) : self
+    public function create(array $request) : void
     {
         $post = new Post();
 
@@ -65,30 +66,48 @@ class PostController extends Controller
             $this->postRepository->save($post);
             echo $this->toJson(['message' => 'Post added']);
         }
-
-        return $this;
     }
 
-    public function edit(int $id, array $post): void
+    /*
+     * @param int $id
+     * @param Request $request
+     * @return void
+     */
+    /**
+     * @param int $id
+     * @param Request $request
+     * @return void
+     */
+    public function edit(int $id, Request $request): void
     {
         // Find the post by ID
         $existingPost = $this->postRepository->find($id);
 
-        var_dump($existingPost->getTitle);
-    }
+        // get the request
+        $request = $request->request->all();
 
+        // Validation
+        $validationHelper = new Validation($request);
+
+        $validationHelper->min([
+            'title' => 'The title requires at least 5 characters'
+        ],5);
+
+        if($validationHelper->validate())
+        {
+            $this->postRepository->update($existingPost,$request);
+            echo $this->toJson(['message' => 'Post edited']);
+        }
+    }
 
     /**
      * @param int $id
-     * @return $this
+     * @return void
      */
-    public function destroy(int $id) : self
+    public function destroy(int $id) : void
     {
         // Destroy the post
         $post = $this->postRepository->delete($id);
-
         if($post) echo $this->toJson(['message' => 'Post delete']);
-
-        return $this;
     }
 }
