@@ -7,7 +7,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(name: 'make:model',description: 'Generate a new model')]
 class CreateModelCommand extends Command
@@ -19,39 +19,137 @@ class CreateModelCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $io = new SymfonyStyle($input, $output);
+        $array = [];
 
-        // TODO: Generate automatically models of the app
-        // Init the helper
-        $helper = $this->getHelper("question");
+        $io->title('Process to make a new model');
 
-        // Questions
-        $question = new Question('What is the name of the field : ');
+        $count = $io->ask('Number of fields in your table',1,function($count){
+            if (!is_numeric($count)) {
+                throw new \RuntimeException('You must type a number.');
+            }
 
-        // Show the question
-        $one = $helper->ask($input,$output,$question);
+            return (int) $count;
+        });
 
-        // Create the file
-        touch('models/'.$input->getArgument('name').'.php');
+        // Ask question to get the name of the field and the type of the filed
+        // Store into an array
+        for($i = 0; $i < $count; $i++)
+        {
 
-        // Create an array
-        $array = [$one];
+            $fieldname = $io->ask('Name of the field : ','Name',function($fieldname){
+                if (!is_string($fieldname)) {
+                    throw new \RuntimeException('You must type a string.');
+                }
 
-        // Write in this file
-        $this->writeIntoTheFile('models/'.$input->getArgument('name').'.php',$input->getArgument('name'));
+                return (string) $fieldname;
+            });
+
+            $fieldtype = $io->ask('Type of the field : ','string',function($fieldtype){
+                if (!is_string($fieldtype)) {
+                    throw new \RuntimeException('You must type a string.');
+                }
+
+                return (string) $fieldtype;
+            });
+
+            $io->text("==================================");
+
+            $array[$fieldname] = $fieldtype;
+        }
+
+        // Create a new file
+        $this->writeIntoTheFile('models/'.$input->getArgument('name').'.php',$input->getArgument('name'),$array);
+
+        //var_dump($array);
 
         return Command::SUCCESS;
     }
 
-    private function writeIntoTheFile(string $path, string $filename)
+    private function writeIntoTheFile(string $path, string $filename, array $array)
     {
+        $content = "";
+
         $file = fopen($path, 'w');
-        $content = "<?php namespace app\models;" . PHP_EOL . PHP_EOL . "class $filename {" . PHP_EOL . PHP_EOL . "}";
+        $content .= "<?php " . PHP_EOL . PHP_EOL. "namespace app\models;" . PHP_EOL . PHP_EOL . "class $filename \t{" . PHP_EOL . PHP_EOL ;
+
+        // Here we have the attributes
+        $content .= $this->attributes($array);
+
+        // Here we have the getters
+        $content .= $this->getter($array);
+
+        // Here we have the setters
+        $content .= $this->setter($array);
+
+        $content .= PHP_EOL . "}";
+
         fwrite($file, $content);
         fclose($file);
     }
 
-    private function access(array $data)
+    private function attributes(array $array): string
     {
+        $content = "";
 
+        foreach($array as $value => $key)
+        {
+            $value = strtolower($value);
+
+            $content .= " \t protected $key $$value;" . PHP_EOL;
+
+            $content .= PHP_EOL;
+        }
+
+        return $content;
     }
+
+    public function getter(array $array) : string
+    {
+        $content = "";
+
+        foreach($array as $value => $key)
+        {
+            $valueUc = ucfirst($value);
+            $valueLc = strtolower($value);
+
+            $content .= "\t public function get$valueUc() : $key " .PHP_EOL;
+
+            $content .= "\t { " . PHP_EOL;
+
+            $content .= "\t\t return \$this->$valueLc; " .PHP_EOL;
+
+            $content .= "\t } " . PHP_EOL;
+
+            $content .= PHP_EOL;
+        }
+
+        return $content;
+    }
+
+    public function setter(array $array) : string
+    {
+        $content = "";
+
+        foreach($array as $value => $key)
+        {
+            $valueUc = ucfirst($value);
+            $valueLc = strtolower($value);
+
+            $content .= "\t public function set$valueUc($key \$$valueLc) : self " .PHP_EOL;
+
+            $content .= "\t { " . PHP_EOL;
+
+            $content .= "\t\t \$this->$valueLc = \$$valueLc; " .PHP_EOL;
+
+            $content .= PHP_EOL . "\t\t return \$this->self; " .PHP_EOL;
+
+            $content .= "\t } " . PHP_EOL;
+
+            $content .= PHP_EOL;
+        }
+
+        return $content;
+    }
+
 }
