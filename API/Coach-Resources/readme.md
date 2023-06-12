@@ -24,3 +24,24 @@ Available commands:
   make:model  Generate a new model
 
 ```
+
+```bash 
+php factory/Console make:model User
+
+Process to make a new model
+===========================
+
+ Number of fields in your table [1]:
+ > 
+
+ Name of the field :  [Name]:
+ > 
+
+ Type of the field :  [string]:
+ > 
+
+ ==================================
+
+```
+
+This command creates you two files, the model and the repository

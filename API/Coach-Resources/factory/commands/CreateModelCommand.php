@@ -2,6 +2,7 @@
 
 namespace app\factory\commands;
 
+use app\helpers\StringHelper;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -58,15 +59,44 @@ class CreateModelCommand extends Command
             $array[$fieldname] = $fieldtype;
         }
 
-        // Create a new file
-        $this->writeIntoTheFile('models/'.$input->getArgument('name').'.php',$input->getArgument('name'),$array);
+        // Create a new file Model
+        $this->model('models/'.$input->getArgument('name').'.php',$input->getArgument('name'),$array);
 
-        //var_dump($array);
+        // Create a new file repository
+        $this->repository('repositories/'.$input->getArgument('name').'Repository.php',$input->getArgument('name'));
 
         return Command::SUCCESS;
     }
 
-    private function writeIntoTheFile(string $path, string $filename, array $array)
+
+    private function repository(string $path, string $filename)
+    {
+        $content = "";
+
+        $modelToPlural = strtolower(StringHelper::plural($filename));
+
+        $file = fopen($path, 'w');
+
+        $content .= "<?php " . PHP_EOL;
+
+        $content .= PHP_EOL . "namespace app\\repositories;";
+
+        $content .= PHP_EOL. "use app\database\ORM;" . PHP_EOL;
+
+        $content .= "class ".$filename."Repository extends ORM";
+
+        $content .= PHP_EOL . "{" . PHP_EOL;
+
+        $content .= "\t protected string \$table = '$modelToPlural';";
+
+        $content .= PHP_EOL . "}";
+
+        fwrite($file, $content);
+
+        fclose($file);
+    }
+
+    private function model(string $path, string $filename, array $array): void
     {
         $content = "";
 
@@ -85,6 +115,7 @@ class CreateModelCommand extends Command
         $content .= PHP_EOL . "}";
 
         fwrite($file, $content);
+
         fclose($file);
     }
 

@@ -31,7 +31,7 @@ class StringHelper
         return implode(",", $modifiedWords);
     }
 
-    private static function plural(String $str): string
+    public static function plural(String $str): string
     {
         // TODO: Implement a real function singular to plural
         return $str.'s';

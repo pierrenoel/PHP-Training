@@ -4,7 +4,7 @@ namespace app\controllers;
 
 use app\helpers\Validation;
 use app\models\Post;
-use app\repository\PostRepository;
+use app\repositories\PostRepository;
 
 class PostController extends Controller
 {
