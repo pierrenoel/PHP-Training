@@ -24,11 +24,10 @@ abstract class ORM
 
     /**
      * @param int $id
-     * @return mixed
+     * @return array|null
      */
     public function find(int $id): ?array
     {
-
         $stmt = Database::getInstance()->prepare('SELECT * FROM '. $this->table . ' where id = :id');
         $stmt->bindValue(':id',$id);
         $stmt->execute();
@@ -36,12 +35,7 @@ abstract class ORM
         $result = $stmt->fetch(\PDO::FETCH_ASSOC);
         return ExceptionHelper::TryAndCatch($result,'Oops, something is wrong!');
     }
-
-    /**
-     * @param Object $object
-     * @return mixed
-     */
-    public function save(object $object): ?array
+    public function save(object $object)
     {
         $getMethodNames = ObjectReflectionHelper::getGetterMethodNames($object);
         $getMethodNamesString = implode(',', $getMethodNames);
@@ -58,7 +52,12 @@ abstract class ORM
         return ExceptionHelper::TryAndCatch($result, 'Oops, something went wrong!');
     }
 
-    public function update(array $existing, array $request)
+    /**
+     * @param array $existing
+     * @param array $request
+     * @return mixed
+     */
+    public function update(array $existing, array $request): mixed
     {
         $array = [];
         $str = "";
@@ -70,7 +69,7 @@ abstract class ORM
 
         $singular = StringHelper::singular($this->table);
         $final = ucfirst($singular);
-        $modelClass = "\\app\\models\\" . $final;
+        $modelClass = "\\core\\models\\" . $final;
 
         $getMethodNames = ObjectReflectionHelper::getGetterMethodNames(new $modelClass());
 
@@ -97,7 +96,7 @@ abstract class ORM
 
     /**
      * @param int $id
-     * @return bool
+     * @return void
      */
     public function delete(int $id) : void
     {
@@ -115,7 +114,6 @@ abstract class ORM
         $deleteStmt->bindValue(':id', $id);
         $deleteStmt->execute();
     }
-
 
     /**
      * @param string $query

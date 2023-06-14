@@ -24,7 +24,8 @@ class PostController extends Controller
      */
     public function index(): void
     {
-        echo $this->ToJson($this->postRepository->findAll());
+        var_dump(app('request')->get('access_token'));
+        //echo $this->ToJson($this->postRepository->findAll());
     }
 
     /**
@@ -40,8 +41,10 @@ class PostController extends Controller
      * @param array $request
      * @return void
      */
-    public function create(array $request) : void
+    public function create() : void
     {
+        $request = app('request')->request->all();
+
         $post = new Post();
 
         $post->setTitle($request['title']);
@@ -75,16 +78,15 @@ class PostController extends Controller
      */
     /**
      * @param int $id
-     * @param Request $request
      * @return void
      */
-    public function edit(int $id, Request $request): void
+    public function edit(int $id): void
     {
         // Find the post by ID
         $existingPost = $this->postRepository->find($id);
 
         // get the request
-        $request = $request->request->all();
+        $request = app('request')->request->all();
 
         // Validation
         $validationHelper = new Validation($request);

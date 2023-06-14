@@ -79,9 +79,9 @@ class CreateModelCommand extends Command
 
         $content .= "<?php " . PHP_EOL;
 
-        $content .= PHP_EOL . "namespace app\\repositories;";
+        $content .= PHP_EOL . "namespace core\\repositories;";
 
-        $content .= PHP_EOL. "use app\database\ORM;" . PHP_EOL;
+        $content .= PHP_EOL. "use core\database\ORM;" . PHP_EOL;
 
         $content .= "class ".$filename."Repository extends ORM";
 
@@ -101,7 +101,7 @@ class CreateModelCommand extends Command
         $content = "";
 
         $file = fopen($path, 'w');
-        $content .= "<?php " . PHP_EOL . PHP_EOL. "namespace app\models;" . PHP_EOL . PHP_EOL . "class $filename \t{" . PHP_EOL . PHP_EOL ;
+        $content .= "<?php " . PHP_EOL . PHP_EOL. "namespace core\models;" . PHP_EOL . PHP_EOL . "class $filename \t{" . PHP_EOL . PHP_EOL ;
 
         // Here we have the attributes
         $content .= $this->attributes($array);
