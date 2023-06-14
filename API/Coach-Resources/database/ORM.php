@@ -14,28 +14,31 @@ abstract class ORM
     protected string $table;
 
     /**
-     * @return mixed
+     * @return bool|array
      */
-    public function findAll() : mixed
+    public function findAll(): bool|array
     {
-        $query = $this->query('SELECT * FROM ' . $this->table);
-        return ExceptionHelper::TryAndCatch($query, 'Oops, something went wrong!');
+        return $this->query('SELECT * FROM ' . $this->table);
     }
 
     /**
      * @param int $id
-     * @return array|null
+     * @return bool|array
      */
-    public function find(int $id): ?array
+    public function find(int $id) : bool|array
     {
         $stmt = Database::getInstance()->prepare('SELECT * FROM '. $this->table . ' where id = :id');
         $stmt->bindValue(':id',$id);
         $stmt->execute();
 
-        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
-        return ExceptionHelper::TryAndCatch($result,'Oops, something is wrong!');
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
-    public function save(object $object)
+
+    /**
+     * @param object $object
+     * @return bool
+     */
+    public function save(object $object): bool
     {
         $getMethodNames = ObjectReflectionHelper::getGetterMethodNames($object);
         $getMethodNamesString = implode(',', $getMethodNames);
@@ -48,16 +51,15 @@ abstract class ORM
             $stmt->bindValue(":$value", $getProtectedProperties[$value]);
         }
 
-        $result = $stmt->execute();
-        return ExceptionHelper::TryAndCatch($result, 'Oops, something went wrong!');
+       return $stmt->execute();
     }
 
     /**
      * @param array $existing
      * @param array $request
-     * @return mixed
+     * @return bool
      */
-    public function update(array $existing, array $request): mixed
+    public function update(array $existing, array $request): bool
     {
         $array = [];
         $str = "";
@@ -89,9 +91,7 @@ abstract class ORM
             $stmt->bindValue(":$value",$array[$value]);
         }
 
-        $result = $stmt->execute();
-
-        return ExceptionHelper::TryAndCatch($result,'Oops, something is wrong!');
+        return $stmt->execute();
     }
 
     /**
@@ -107,7 +107,7 @@ abstract class ORM
         $rowCount = $stmt->rowCount();
 
         if ($rowCount === 0) {
-            ExceptionHelper::TryAndCatch($rowCount,'Oops, something is wrong!');
+            //ExceptionHelper::TryAndCatch($rowCount,'Oops, something is wrong!');
         }
 
         $deleteStmt = Database::getInstance()->prepare('DELETE FROM ' . $this->table . ' WHERE id = :id');

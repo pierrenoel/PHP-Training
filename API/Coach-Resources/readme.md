@@ -45,3 +45,6 @@ Process to make a new model
 ```
 
 This command creates you two files, the model and the repository
+
+## To update: 
+- The way of generate the response

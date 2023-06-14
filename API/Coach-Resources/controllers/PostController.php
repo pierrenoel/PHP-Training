@@ -2,16 +2,13 @@
 
 namespace app\controllers;
 
+use app\helpers\ExceptionHelper;
 use app\helpers\Validation;
 use app\models\Post;
 use app\repositories\PostRepository;
-use Symfony\Component\HttpFoundation\Request;
 
 class PostController extends Controller
 {
-    /**
-     * @var PostRepository
-     */
     protected PostRepository $postRepository;
 
     public function __construct()
@@ -19,30 +16,31 @@ class PostController extends Controller
         $this->postRepository = new PostRepository();
     }
 
-    /**
-     * @return void
-     */
     public function index(): void
     {
-        var_dump(app('request')->get('access_token'));
-        //echo $this->ToJson($this->postRepository->findAll());
+        echo ExceptionHelper::getException(
+            'posts', $this->postRepository->findAll(),
+            [
+                'response_code' => 404,
+                'message' => 'Oops something is wrong'
+            ]
+        );
     }
 
-    /**
-     * @param int $id
-     * @return void
-     */
     public function show(int $id): void
     {
-        echo $this->ToJson($this->postRepository->find($id));
+        echo ExceptionHelper::getException(
+            'posts', $this->postRepository->find($id),
+                [
+                    'response_code' => 404,
+                    'message' => 'Oops something is wrong'
+                ]
+        );
     }
 
-    /**
-     * @param array $request
-     * @return void
-     */
     public function create() : void
     {
+
         $request = app('request')->request->all();
 
         $post = new Post();
@@ -51,24 +49,18 @@ class PostController extends Controller
         $post->setExcerpt($request['excerpt']);
         $post->setBody($request['body']);
 
-        // Validation
-        $validationHelper = new Validation($request);
+        // Validation here
 
-        $validationHelper->required([
-            'title' => 'The title is required',
-            'excerpt' => 'The excerpt is required',
-            'body' => 'The body is required'
-        ]);
+        echo ExceptionHelper::postException(
+            'posts',
+            'The post is added',
+            $this->postRepository->save($post),
+            [
+                'response_code' => 500,
+                'message' => 'Oops, something is wrong, post not added'
+            ]
+        );
 
-        $validationHelper->min([
-            'title' => 'The title requires at least 5 characters'
-        ],5);
-
-        if($validationHelper->validate())
-        {
-            $this->postRepository->save($post);
-            echo $this->toJson(['message' => 'Post added']);
-        }
     }
 
     /*
@@ -94,6 +86,8 @@ class PostController extends Controller
         $validationHelper->min([
             'title' => 'The title requires at least 5 characters'
         ],5);
+
+        // Todo : improve this part ...
 
         if($validationHelper->validate())
         {

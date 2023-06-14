@@ -5,8 +5,14 @@ namespace app\controllers;
 abstract class Controller
 {
 
-    public function toJson(array $array): bool|string
+    public function toJson(array $array)
     {
-        return json_encode($array);
+        $response = app('response');
+
+        $response->setContent(json_encode($array));
+
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
     }
 }

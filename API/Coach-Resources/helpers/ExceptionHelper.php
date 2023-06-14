@@ -5,37 +5,58 @@ namespace app\helpers;
 class ExceptionHelper
 {
 
-    /**
-     * @param mixed $mixed
-     * @param string $string
-     * @return void
-     * @throws \Exception
-     */
-    private static function ExceptionMessage(mixed $mixed, string $string): void
+    protected Response $reponse;
+
+    public function __construct()
     {
-        if(empty($mixed)) throw new \Exception($string);
+        $this->reponse = app('response');
     }
 
-    /**
-     * @param mixed $mixed
-     * @param string $message
-     * @param int|null $status
-     * @return mixed
-     */
-    public static function TryAndCatch(mixed $mixed, string $message, int $status = null): mixed
+    public static function getException(string $success_title, bool|array $query, array $error)
     {
-        try {
-            self::ExceptionMessage($mixed,$message);
-            return $mixed;
-        }catch(\Exception $e)
+
+        $response = app('response');
+
+        if($query) {
+            $response->setContent(json_encode([
+                'response_code' => 200,
+                $success_title => $query
+            ]));
+        }
+        else
         {
-            empty($status)
-                ? http_response_code(404)
-                : http_response_code($status);
-            echo json_encode($e->getMessage());
+            http_response_code($error['response_code']);
+            $response->setContent(json_encode([
+                'response_code' => $error['response_code'],
+                'message' => $error['message']
+            ]));
         }
 
-        return new self;
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
     }
 
+    public static function postException(string $success_title, string $title, bool $query, array $error)
+    {
+
+        $response = app('response');
+
+        if($query) {
+            $response->setContent(json_encode([
+                'response_code' => 200,
+                $success_title => $title
+            ]));
+        }
+        else
+        {
+            http_response_code($error['response_code']);
+            $response->setContent(json_encode([
+                'response_code' => $error['response_code'],
+                'message' => $error['message']
+            ]));
+        }
+
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
 }
