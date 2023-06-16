@@ -2,17 +2,16 @@
 
 namespace app\controllers;
 
+use app\helpers\Response;
+
 abstract class Controller
 {
+    protected mixed $response;
+    protected mixed $request;
 
-    public function toJson(array $array)
+    public function __construct()
     {
-        $response = app('response');
-
-        $response->setContent(json_encode($array));
-
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
+        $this->response = new Response();
+        $this->request = app('request')->request->all();
     }
 }

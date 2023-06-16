@@ -67,11 +67,19 @@ class Validation
      */
     public function validate(): bool|string
     {
-       if(!empty($this->result))
-       {
-           http_response_code(400);
-           echo json_encode($this->result);
-       }
-       else return true;
+        $response = app('response');
+
+        if (empty($this->result)) {
+            return true;
+        } else {
+            http_response_code(400);
+
+            echo $response->setContent(json_encode([
+                'response_code' => 400,
+                'message' => $this->result
+            ]));
+
+            return false;
+        }
     }
 }

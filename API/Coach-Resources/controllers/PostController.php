@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-use app\helpers\ExceptionHelper;
+use app\helpers\Response;
 use app\helpers\Validation;
 use app\models\Post;
 use app\repositories\PostRepository;
@@ -13,54 +13,48 @@ class PostController extends Controller
 
     public function __construct()
     {
+        parent::__construct();
         $this->postRepository = new PostRepository();
     }
 
     public function index(): void
     {
-        echo ExceptionHelper::getException(
-            'posts', $this->postRepository->findAll(),
-            [
-                'response_code' => 404,
-                'message' => 'Oops something is wrong'
-            ]
-        );
+        $this->response->execute($this->postRepository->findAll(),[
+            'title' => 'posts'
+        ]);
     }
 
     public function show(int $id): void
     {
-        echo ExceptionHelper::getException(
-            'posts', $this->postRepository->find($id),
-                [
-                    'response_code' => 404,
-                    'message' => 'Oops something is wrong'
-                ]
-        );
+        $this->response->execute($this->postRepository->find($id),[
+            'success_title' => 'post',
+            'error_message' => 'The post is not found',
+            'error_code' => 404
+        ]);
     }
 
     public function create() : void
     {
 
-        $request = app('request')->request->all();
-
         $post = new Post();
+        $validation = new Validation($this->request);
 
-        $post->setTitle($request['title']);
-        $post->setExcerpt($request['excerpt']);
-        $post->setBody($request['body']);
+        $post->setTitle($this->request['title']);
+        $post->setExcerpt($this->request['excerpt']);
+        $post->setBody($this->request['body']);
 
-        // Validation here
+        $validation->required([
+            'title' => 'The title is required',
+            'excerpt' => 'The excerpt is required',
+            'body' => 'The body is required'
+        ]);
 
-        echo ExceptionHelper::postException(
-            'posts',
-            'The post is added',
-            $this->postRepository->save($post),
-            [
-                'response_code' => 500,
-                'message' => 'Oops, something is wrong, post not added'
-            ]
-        );
+        if($validation->validate())
 
+            $this->response->execute($this->postRepository->save($post), [
+                'success_title' => 'message',
+                'success_message' => 'The post is added'
+            ]);
     }
 
     /*
@@ -74,26 +68,19 @@ class PostController extends Controller
      */
     public function edit(int $id): void
     {
-        // Find the post by ID
-        $existingPost = $this->postRepository->find($id);
+        $post = $this->postRepository->find($id);
+        $validation = new Validation($this->request);
 
-        // get the request
-        $request = app('request')->request->all();
-
-        // Validation
-        $validationHelper = new Validation($request);
-
-        $validationHelper->min([
+        $validation->min([
             'title' => 'The title requires at least 5 characters'
         ],5);
 
-        // Todo : improve this part ...
+        if($validation->validate())
 
-        if($validationHelper->validate())
-        {
-            $this->postRepository->update($existingPost,$request);
-            echo $this->toJson(['message' => 'Post edited']);
-        }
+            $this->response->execute($this->postRepository->update($post,$this->request), [
+                'success_title' => 'message',
+                'success_message' => 'The post is edited'
+            ]);
     }
 
     /**
@@ -102,8 +89,15 @@ class PostController extends Controller
      */
     public function destroy(int $id) : void
     {
-        // Destroy the post
-        $post = $this->postRepository->delete($id);
-        if($post) echo $this->toJson(['message' => 'Post delete']);
+        $post = $this->postRepository->find($id);
+
+        if($post['id'])
+        {
+            $this->response->execute($this->postRepository->delete($post['id']), [
+                'success_title' => 'message',
+                'success_message' => 'The post is delete'
+            ]);
+        }
+        else $this->response->setError('The post is not found',404);
     }
 }

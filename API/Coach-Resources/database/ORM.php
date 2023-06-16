@@ -71,7 +71,7 @@ abstract class ORM
 
         $singular = StringHelper::singular($this->table);
         $final = ucfirst($singular);
-        $modelClass = "\\core\\models\\" . $final;
+        $modelClass = "\\app\\models\\" . $final;
 
         $getMethodNames = ObjectReflectionHelper::getGetterMethodNames(new $modelClass());
 
@@ -94,25 +94,11 @@ abstract class ORM
         return $stmt->execute();
     }
 
-    /**
-     * @param int $id
-     * @return void
-     */
-    public function delete(int $id) : void
+    public function delete(?int $id)
     {
-        $stmt = Database::getInstance()->prepare('SELECT * FROM ' . $this->table . ' WHERE id = :id');
-        $stmt->bindValue(':id', $id);
-        $stmt->execute();
-
-        $rowCount = $stmt->rowCount();
-
-        if ($rowCount === 0) {
-            //ExceptionHelper::TryAndCatch($rowCount,'Oops, something is wrong!');
-        }
-
         $deleteStmt = Database::getInstance()->prepare('DELETE FROM ' . $this->table . ' WHERE id = :id');
         $deleteStmt->bindValue(':id', $id);
-        $deleteStmt->execute();
+        return $deleteStmt->execute();
     }
 
     /**
