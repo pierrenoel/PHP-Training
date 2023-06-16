@@ -63,6 +63,15 @@ class Validation
     }
 
     /**
+     * @param string $value
+     * @return string
+     */
+    private function escapeHtml(string $value): string
+    {
+        return htmlspecialchars($value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    }
+
+    /**
      * @return bool|string
      */
     public function validate(): bool|string
@@ -71,8 +80,13 @@ class Validation
 
         if (empty($this->result)) {
             return true;
+
         } else {
             http_response_code(400);
+
+            foreach ($this->result as $key => $value) {
+                $this->result[$key] = $this->escapeHtml($value);
+            }
 
             echo $response->setContent(json_encode([
                 'response_code' => 400,
