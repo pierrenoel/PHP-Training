@@ -25,4 +25,9 @@ $router->delete('/post/delete/:id',function ($id){
     (new \app\controllers\PostController())->destroy($id);
 });
 
+// Categories
+$router->get('/categories',function(){
+    (new \app\controllers\CategoryController())->index();
+});
+
 $router->run();

@@ -94,11 +94,63 @@ abstract class ORM
         return $stmt->execute();
     }
 
+    /**
+     * @param int|null $id
+     * @return bool
+     */
     public function delete(?int $id)
     {
         $deleteStmt = Database::getInstance()->prepare('DELETE FROM ' . $this->table . ' WHERE id = :id');
         $deleteStmt->bindValue(':id', $id);
         return $deleteStmt->execute();
+    }
+
+    /**
+     * @param string $foreign_table
+     * @param string $foreign_name
+     * @return array|bool
+     */
+    public function hasOne(string $foreign_table, string $foreign_name)
+    {
+
+        $called_table = $this->whatnameused($this->table,'x',true);
+        $joined_table = $this->whatnameused($foreign_table,'y',false);
+
+        return $this->query(
+            'SELECT '.$called_table.','.$joined_table.' as description
+             FROM '.$this->table.' x
+             join '.$foreign_table.' y
+             on x.'.$foreign_name.' = y.id');
+    }
+
+    /**
+     * @param string $table
+     * @param string $letter
+     * @param bool $lastOne
+     * @return string
+     */
+    private function whatnameused(string $table, string $letter, bool $lastOne): string
+    {
+        $tableOne =  $this->query('DESCRIBE '.$table);
+
+        $array = [];
+
+        foreach($tableOne as $key => $value)
+        {
+            $array[] = $letter .'.'.$value['Field'];
+        }
+
+        if($lastOne)
+        {
+            $removedVal = array_slice($array, 0, -1);
+            $str = implode(',',$removedVal);
+        }
+        else
+        {
+            $str = implode(',',$array);
+        }
+
+        return $str;
     }
 
     /**

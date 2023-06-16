@@ -18,6 +18,11 @@ class Post
     protected string $body;
 
     /**
+     * @var int
+     */
+    protected int $category_id;
+
+    /**
      * @return string
      */
     public function getTitle(): string
@@ -65,6 +70,24 @@ class Post
     public function setBody(string $body): self
     {
         $this->body = $body;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCategory_id() : int
+    {
+        return $this->category_id;
+    }
+
+    /**
+     * @param int $category_id
+     * @return $this
+     */
+    public function setCategory_id(int $category_id) : self
+    {
+        $this->category_id = $category_id;
         return $this;
     }
 }

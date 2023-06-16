@@ -13,9 +13,15 @@ class Validation
      */
     protected array $result = [];
 
+    /**
+     * @var mixed
+     */
+    protected mixed $response;
+
     public function __construct(array $request)
     {
         $this->request = $request;
+        $this->response = app('response');
     }
 
     /**
@@ -40,6 +46,53 @@ class Validation
             return strlen($value) <= $min && strlen($value) >= 1;
         });
     }
+
+    /**
+     * @param array $array
+     * @param int $max
+     * @return $this
+     */
+    public function max(array $array, int $max) :self
+    {
+        return $this->checkConditions($array, function ($value) use ($max) {
+            return strlen($value) >= 1 && strlen($value) <= $max;
+        });
+    }
+
+    /**
+     * @param $array
+     * @return $this
+     */
+    public function email($array) : self
+    {
+        return $this->checkConditions($array,function($value) {
+            $sanitizedValue = $this->sanitizeEmail($value);
+            return filter_var($sanitizedValue, FILTER_VALIDATE_EMAIL) === false;
+        });
+    }
+
+    /**
+     * @return bool|string
+     */
+    public function validate(): bool|string
+    {
+        if (empty($this->result)) return true;
+        else {
+            http_response_code(400);
+
+            foreach ($this->result as $key => $value) {
+                $this->result[$key] = $this->escapeHtml($value);
+            }
+
+            echo $this->response->setContent(json_encode([
+                'response_code' => 400,
+                'message' => $this->result
+            ]));
+
+            return false;
+        }
+    }
+
 
     /**
      * @param array $array
@@ -72,28 +125,12 @@ class Validation
     }
 
     /**
-     * @return bool|string
+     * @param string $email
+     * @return string
      */
-    public function validate(): bool|string
+    private function sanitizeEmail(string $email): string
     {
-        $response = app('response');
-
-        if (empty($this->result)) {
-            return true;
-
-        } else {
-            http_response_code(400);
-
-            foreach ($this->result as $key => $value) {
-                $this->result[$key] = $this->escapeHtml($value);
-            }
-
-            echo $response->setContent(json_encode([
-                'response_code' => 400,
-                'message' => $this->result
-            ]));
-
-            return false;
-        }
+        return filter_var($email, FILTER_SANITIZE_EMAIL);
     }
+
 }

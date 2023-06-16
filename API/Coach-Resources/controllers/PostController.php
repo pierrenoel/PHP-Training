@@ -19,9 +19,14 @@ class PostController extends Controller
 
     public function index(): void
     {
-        $this->response->execute($this->postRepository->findAll(),[
-            'title' => 'posts'
+        //$this->postRepository->hasOne('categories','category_id');
+
+
+        $this->response->execute($this->postRepository->hasOne('categories', 'category_id'),[
+            'success_title' => 'posts'
         ]);
+
+
     }
 
     public function show(int $id): void
