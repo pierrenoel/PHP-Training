@@ -1,7 +1,7 @@
 <?php
 
 use app\core\Container;
-use \Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 $container = new Container();

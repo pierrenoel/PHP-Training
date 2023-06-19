@@ -19,9 +19,16 @@ class CategoryController extends Controller
 
     public function index()
     {
-        // Show all the categories
         $this->response->execute($this->categoryRepository->findAll(),[
-            'success_title' => 'Categories',
+            'success_title' => 'categories'
+        ]);
+    }
+
+    public function show($id)
+    {
+        // Show all the posts linked to this category
+        $this->response->execute($this->categoryRepository->getAll('category_id','posts',$id),[
+            'success_title' => 'posts',
         ]);
     }
 }

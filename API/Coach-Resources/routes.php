@@ -30,4 +30,8 @@ $router->get('/categories',function(){
     (new \app\controllers\CategoryController())->index();
 });
 
+$router->get('/category/:id',function($id){
+    (new \app\controllers\CategoryController())->show($id);
+});
+
 $router->run();

@@ -2,10 +2,12 @@
 
 require_once './vendor/autoload.php';
 
-function app(string $name)
+function app(string $name, ...$args)
 {
     $container = require 'config/Services.php';
-    return $container->resolve($name);
+    return  $container->resolve($name);
 }
 
 require_once 'routes.php';
+
+

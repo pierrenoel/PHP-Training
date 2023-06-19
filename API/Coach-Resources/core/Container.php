@@ -1,7 +1,6 @@
 <?php
 
 namespace app\core;
-
 class Container
 {
     /**
@@ -25,7 +24,7 @@ class Container
      */
     public function resolve(string $name): mixed
     {
-        if(!isset($this->services[$name])) throw new Exception("Service '$name' not found in the container.");
+        if(!isset($this->services[$name])) throw new \Exception("Service '$name' not found in the container.");
 
         $factory = $this->services[$name];
 

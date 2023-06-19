@@ -2,11 +2,8 @@
 
 namespace app\database;
 
-use app\helpers\ExceptionHelper;
 use app\helpers\ObjectReflectionHelper;
 use app\helpers\StringHelper;
-use app\models\Post;
-use Symfony\Component\Console\Helper\Helper;
 
 abstract class ORM
 {
@@ -16,6 +13,7 @@ abstract class ORM
     protected string $table;
 
     /**
+     * @param array|null $options
      * @return bool|array
      */
     public function findAll(?array $options = null): bool|array
@@ -25,48 +23,17 @@ abstract class ORM
     }
 
     /**
+     * @param string $foreign_key
      * @param string $table
-     * @return array
+     * @param int|null $id
+     * @return bool|array
      */
-    private function getModelClass(string $table): array
-    {
-        $singular = StringHelper::singular($table);
-        $final = ucfirst($singular);
-        $modelClass = "\\app\\models\\" . $final;
-
-        return ObjectReflectionHelper::getGetterMethodNames(new $modelClass());
-    }
-
-    /**
-     * @param string $table
-     * @return string
-     */
-    private function relationshipStrConstruction(string $table) : string
-    {
-        $str = "";
-        $className = $this->getModelClass($table);
-
-        foreach($className as $value)
-        {
-            $str .= "\"".$value ."\",$table.$value,";
-        }
-
-        return substr($str,1,-1);
-    }
-
-    /**
-     * @param object $class
-     * @param string $foreign_id
-     * @param string $table
-     * @return array|false
-     */
-    public function hasOne(string $foreign_key, string $table, ?int $id = null): bool|array
+    public function getOne(string $foreign_key, string $table, ?int $id = null): bool|array
     {
         $foreign_table = StringHelper::singular($table);
 
-
         $stmt = Database::getInstance()->query(
-            'SELECT '.$this->table.'.*, JSON_ARRAYAGG(JSON_OBJECT("'.$this->relationshipStrConstruction($table).')) AS '.$foreign_table.'
+            'SELECT '.$this->table.'.*, JSON_ARRAYAGG(JSON_OBJECT("'.$this->buildRelationshipOneString($table).')) AS '.$foreign_table.'
             FROM ' . $this->table . ' 
             INNER JOIN '.$table.' ON '.$this->table.'.'.$foreign_key.' = '.$table.'.id '
             . (isset($id) ? 'WHERE '.$this->table.'.id = '.$id : '') . '
@@ -79,6 +46,21 @@ abstract class ORM
         }
 
         return $results;
+    }
+
+    /**
+     * @param string $foreign_key
+     * @param string $table
+     * @param int $id
+     * @return bool|array
+     */
+    public function getAll(string $foreign_key, string $table, int $id): bool|array
+    {
+        $stmt = Database::getInstance()->prepare('SELECT * FROM '. $table . ' where '.$foreign_key.' = :id');
+        $stmt->bindValue(':id',$id);
+        $stmt->execute();
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     /**
@@ -121,33 +103,13 @@ abstract class ORM
      */
     public function update(array $existing, array $request): bool
     {
-        // TODO: This part should be separate - from here
-        $array = [];
-        $str = "";
+        $array = $this->processRequestData($existing, $request);
 
-        foreach($request as $key => $value)
-        {
-            empty($value) ? $array[$key] = $existing[$key] : $array[$key] = $value;
-        }
+        $str = $this->constructUpdateQuery($this->getModelClass($this->table));
 
-        $singular = StringHelper::singular($this->table);
-        $final = ucfirst($singular);
-        $modelClass = "\\app\\models\\" . $final;
-
-        $getMethodNames = ObjectReflectionHelper::getGetterMethodNames(new $modelClass());
-
-        // construct the query like name=:name, title=:title, ...
-        foreach($getMethodNames as $value)
-        {
-            $str .= $value.'=:'.$value.',';
-        }
-
-        $str = substr_replace($str ,"", -1);
-
-        // Todo: to here
-
-        // Making the sql
         $stmt = Database::getInstance()->prepare('UPDATE '.$this->table . ' SET ' . $str .' WHERE id='. $existing["id"]);
+
+        $getMethodNames = $this->getModelClass($this->table);
 
         foreach($getMethodNames as $value)
         {
@@ -166,5 +128,69 @@ abstract class ORM
         $deleteStmt = Database::getInstance()->prepare('DELETE FROM ' . $this->table . ' WHERE id = :id');
         $deleteStmt->bindValue(':id', $id);
         return $deleteStmt->execute();
+    }
+
+    /**
+     * @param array $existing
+     * @param array $request
+     * @return array
+     */
+    private function processRequestData(array $existing, array $request): array
+    {
+        $array = [];
+
+        foreach($request as $key => $value)
+        {
+            empty($value) ? $array[$key] = $existing[$key] : $array[$key] = $value;
+        }
+
+        return $array;
+    }
+
+    /**
+     * @param array $getMethodNames
+     * @return string
+     */
+    private function constructUpdateQuery(array $getMethodNames): string
+    {
+        $str = "";
+
+        foreach($getMethodNames as $value)
+        {
+            $str .= $value.'=:'.$value.',';
+        }
+
+        return substr_replace($str ,"", -1);
+    }
+
+    /**
+     * @param string $table
+     * @return array
+     */
+    private function getModelClass(string $table): array
+    {
+        $singular = StringHelper::singular($table);
+        $final = ucfirst($singular);
+        $modelClass = "\\app\\models\\" . $final;
+
+        return ObjectReflectionHelper::getGetterMethodNames(new $modelClass());
+    }
+
+    /**
+     * @param string $table
+     * @return string
+     */
+    private function buildRelationshipOneString(string $table) : string
+    {
+        $str = "";
+
+        $className = $this->getModelClass($table);
+
+        foreach($className as $value)
+        {
+            $str .= "\"".$value ."\",$table.$value,";
+        }
+
+        return substr($str,1,-1);
     }
 }

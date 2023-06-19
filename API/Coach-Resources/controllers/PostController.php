@@ -2,11 +2,9 @@
 
 namespace app\controllers;
 
-use app\helpers\Response;
 use app\helpers\Validation;
 use app\models\Post;
 use app\repositories\PostRepository;
-use app\models\Category;
 
 class PostController extends Controller
 {
@@ -29,7 +27,7 @@ class PostController extends Controller
      */
     public function index(): void
     {
-        $this->response->execute($this->postRepository->hasOne('category_id','categories'),[
+        $this->response->execute($this->postRepository->findAll(),[
             'success_title' => 'posts',
         ]);
     }
@@ -40,7 +38,7 @@ class PostController extends Controller
      */
     public function show(int $id): void
     {
-        $this->response->execute($this->postRepository->hasOne('category_id','categories',$id),[
+        $this->response->execute($this->postRepository->getOne('category_id','categories',$id),[
             'success_title' => 'post',
             'error_message' => 'The post is not found',
             'error_code' => 404
@@ -60,7 +58,6 @@ class PostController extends Controller
         $post->setExcerpt($this->request['excerpt']);
         $post->setBody($this->request['body']);
         $post->setCategory_id($this->request['category_id']);
-
 
         $validation->required([
             'title' => 'The title is required',
@@ -89,6 +86,7 @@ class PostController extends Controller
     public function edit(int $id): void
     {
         $post = $this->postRepository->find($id);
+
         $validation = new Validation($this->request);
 
         $validation->min([
