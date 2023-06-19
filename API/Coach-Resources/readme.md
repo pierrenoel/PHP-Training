@@ -132,3 +132,39 @@ public function index(): void
 ```
 
 You can also pass an id ```hasOne('category_id,'categories,$id)``` if you want to show a specific post.
+
+## Create and update
+
+```php 
+public function create() : void
+    {
+
+        $post = new Post();
+        
+        $post->setTitle($this->request['title']);
+        $post->setExcerpt($this->request['excerpt']);
+        $post->setBody($this->request['body']);
+        $post->setCategory_id($this->request['category_id']);
+
+        $validation = new Validation($this->request);
+
+        $validation->required([
+            'title' => 'The title is required',
+            'excerpt' => 'The excerpt is required',
+            'body' => 'The body is required',
+            'category_id' => 'The if of the category is required'
+        ]);
+        
+        $validation->min([
+            'title' => 'The title requires at least 5 caracters'
+        ],5)
+
+        if($validation->validate())
+
+            $this->response->execute($this->postRepository->save($post), [
+                'success_title' => 'message',
+                'success_message' => 'The post is added'
+            ]);
+    }
+
+```
