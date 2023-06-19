@@ -5,6 +5,8 @@ namespace app\database;
 use app\helpers\ExceptionHelper;
 use app\helpers\ObjectReflectionHelper;
 use app\helpers\StringHelper;
+use app\models\Post;
+use Symfony\Component\Console\Helper\Helper;
 
 abstract class ORM
 {
@@ -16,9 +18,67 @@ abstract class ORM
     /**
      * @return bool|array
      */
-    public function findAll(): bool|array
+    public function findAll(?array $options = null): bool|array
     {
-        return $this->query('SELECT * FROM ' . $this->table);
+        $stmt = Database::getInstance()->query('SELECT * FROM ' . $this->table);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * @param string $table
+     * @return array
+     */
+    private function getModelClass(string $table): array
+    {
+        $singular = StringHelper::singular($table);
+        $final = ucfirst($singular);
+        $modelClass = "\\app\\models\\" . $final;
+
+        return ObjectReflectionHelper::getGetterMethodNames(new $modelClass());
+    }
+
+    /**
+     * @param string $table
+     * @return string
+     */
+    private function relationshipStrConstruction(string $table) : string
+    {
+        $str = "";
+        $className = $this->getModelClass($table);
+
+        foreach($className as $value)
+        {
+            $str .= "\"".$value ."\",$table.$value,";
+        }
+
+        return substr($str,1,-1);
+    }
+
+    /**
+     * @param object $class
+     * @param string $foreign_id
+     * @param string $table
+     * @return array|false
+     */
+    public function hasOne(string $foreign_key, string $table, ?int $id = null): bool|array
+    {
+        $foreign_table = StringHelper::singular($table);
+
+
+        $stmt = Database::getInstance()->query(
+            'SELECT '.$this->table.'.*, JSON_ARRAYAGG(JSON_OBJECT("'.$this->relationshipStrConstruction($table).')) AS '.$foreign_table.'
+            FROM ' . $this->table . ' 
+            INNER JOIN '.$table.' ON '.$this->table.'.'.$foreign_key.' = '.$table.'.id '
+            . (isset($id) ? 'WHERE '.$this->table.'.id = '.$id : '') . '
+            GROUP BY '.$this->table.'.id');
+
+        $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        foreach ($results as &$result) {
+            $result[$foreign_table] = json_decode($result[$foreign_table], true);
+        }
+
+        return $results;
     }
 
     /**
@@ -61,6 +121,7 @@ abstract class ORM
      */
     public function update(array $existing, array $request): bool
     {
+        // TODO: This part should be separate - from here
         $array = [];
         $str = "";
 
@@ -83,6 +144,8 @@ abstract class ORM
 
         $str = substr_replace($str ,"", -1);
 
+        // Todo: to here
+
         // Making the sql
         $stmt = Database::getInstance()->prepare('UPDATE '.$this->table . ' SET ' . $str .' WHERE id='. $existing["id"]);
 
@@ -98,68 +161,10 @@ abstract class ORM
      * @param int|null $id
      * @return bool
      */
-    public function delete(?int $id)
+    public function delete(?int $id): bool
     {
         $deleteStmt = Database::getInstance()->prepare('DELETE FROM ' . $this->table . ' WHERE id = :id');
         $deleteStmt->bindValue(':id', $id);
         return $deleteStmt->execute();
-    }
-
-    /**
-     * @param string $foreign_table
-     * @param string $foreign_name
-     * @return array|bool
-     */
-    public function hasOne(string $foreign_table, string $foreign_name)
-    {
-
-        $called_table = $this->whatnameused($this->table,'x',true);
-        $joined_table = $this->whatnameused($foreign_table,'y',false);
-
-        return $this->query(
-            'SELECT '.$called_table.','.$joined_table.' as description
-             FROM '.$this->table.' x
-             join '.$foreign_table.' y
-             on x.'.$foreign_name.' = y.id');
-    }
-
-    /**
-     * @param string $table
-     * @param string $letter
-     * @param bool $lastOne
-     * @return string
-     */
-    private function whatnameused(string $table, string $letter, bool $lastOne): string
-    {
-        $tableOne =  $this->query('DESCRIBE '.$table);
-
-        $array = [];
-
-        foreach($tableOne as $key => $value)
-        {
-            $array[] = $letter .'.'.$value['Field'];
-        }
-
-        if($lastOne)
-        {
-            $removedVal = array_slice($array, 0, -1);
-            $str = implode(',',$removedVal);
-        }
-        else
-        {
-            $str = implode(',',$array);
-        }
-
-        return $str;
-    }
-
-    /**
-     * @param string $query
-     * @return bool|array
-     */
-    private function query(string $query): bool|array
-    {
-        $database = Database::getInstance()->query($query);
-        return $database->fetchAll(\PDO::FETCH_ASSOC);
     }
 }

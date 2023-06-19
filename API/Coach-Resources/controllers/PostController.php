@@ -6,38 +6,50 @@ use app\helpers\Response;
 use app\helpers\Validation;
 use app\models\Post;
 use app\repositories\PostRepository;
+use app\models\Category;
 
 class PostController extends Controller
 {
+    /**
+     * @var PostRepository
+     */
     protected PostRepository $postRepository;
 
+    /**
+     *
+     */
     public function __construct()
     {
         parent::__construct();
         $this->postRepository = new PostRepository();
     }
 
+    /**
+     * @return void
+     */
     public function index(): void
     {
-        //$this->postRepository->hasOne('categories','category_id');
-
-
-        $this->response->execute($this->postRepository->hasOne('categories', 'category_id'),[
-            'success_title' => 'posts'
+        $this->response->execute($this->postRepository->hasOne('category_id','categories'),[
+            'success_title' => 'posts',
         ]);
-
-
     }
 
+    /**
+     * @param int $id
+     * @return void
+     */
     public function show(int $id): void
     {
-        $this->response->execute($this->postRepository->find($id),[
+        $this->response->execute($this->postRepository->hasOne('category_id','categories',$id),[
             'success_title' => 'post',
             'error_message' => 'The post is not found',
             'error_code' => 404
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function create() : void
     {
 
@@ -47,11 +59,14 @@ class PostController extends Controller
         $post->setTitle($this->request['title']);
         $post->setExcerpt($this->request['excerpt']);
         $post->setBody($this->request['body']);
+        $post->setCategory_id($this->request['category_id']);
+
 
         $validation->required([
             'title' => 'The title is required',
             'excerpt' => 'The excerpt is required',
-            'body' => 'The body is required'
+            'body' => 'The body is required',
+            'category_id' => 'The category is required'
         ]);
 
         if($validation->validate())

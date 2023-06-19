@@ -20,6 +20,10 @@ class StringHelper
         return self::plural($className);
     }
 
+    /**
+     * @param string $string
+     * @return string
+     */
     public static function addColonToFrontOfWords(string $string) : string
     {
         $words = explode(",", $string);
@@ -31,13 +35,53 @@ class StringHelper
         return implode(",", $modifiedWords);
     }
 
+    /**
+     * @param string $str
+     * @return string
+     */
     public static function plural(string $str): string
     {
-        // TODO: Implement a real function singular to plural
-        return $str.'s';
+        $lastChar = strtolower(substr($str, -1));
+
+        switch ($lastChar) {
+            case 's':
+                return $str . 'es'; // e.g., bus -> buses
+            case 'y':
+                $secondLastChar = strtolower(substr($str, -2, 1));
+                if (!in_array($secondLastChar, ['a', 'e', 'i', 'o', 'u'])) {
+                    return substr($str, 0, -1) . 'ies'; // e.g., city -> cities
+                }
+                break;
+        }
+
+        return $str . 's';
     }
+
+    /**
+     * @param string $str
+     * @return string
+     */
     public static function singular(string $str) : string
     {
-        return rtrim($str,'s');
+        $lastThreeChars = strtolower(substr($str, -3));
+        $lastTwoChars = strtolower(substr($str, -2));
+        $lastChar = strtolower(substr($str, -1));
+
+        switch ($lastThreeChars) {
+            case 'ies':
+                return substr($str, 0, -3) . 'y'; // e.g., cities -> city
+            case 'ses':
+            case 'xes':
+            case 'zes':
+                return substr($str, 0, -2); // e.g., buses -> bus
+            default:
+                if ($lastChar === 's') {
+                    return substr($str, 0, -1); // e.g., dogs -> dog
+                } elseif ($lastTwoChars === 'es') {
+                    return substr($str, 0, -1); // e.g., boxes -> box
+                } else {
+                    return $str; // singular form or irregular plural
+                }
+        }
     }
 }

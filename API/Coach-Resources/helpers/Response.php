@@ -4,13 +4,28 @@ namespace app\helpers;
 
 class Response
 {
+    /**
+     * @var mixed
+     */
     protected mixed $response;
+    /**
+     * @var array
+     */
     protected array $array;
+
+    /**
+     *
+     */
     public function __construct()
     {
         $this->response = app('response');
     }
 
+    /**
+     * @param array|bool $query
+     * @param array|null $params
+     * @return void
+     */
     public function execute(array|bool $query, ?array $params): void
     {
         $title = (!empty($params['success_title'])) ? $params['success_title'] : 'message';
@@ -26,7 +41,6 @@ class Response
                 'response_code' => 200,
                 $title => $message
             ]));
-
         }
         else
         {
@@ -43,6 +57,11 @@ class Response
         echo $this->response;
     }
 
+    /**
+     * @param string $message
+     * @param int $status
+     * @return void
+     */
     public function setError(string $message, int $status): void
     {
         http_response_code($status);

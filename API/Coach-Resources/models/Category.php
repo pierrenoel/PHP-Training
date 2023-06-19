@@ -1,6 +1,6 @@
 <?php 
 
-namespace core\models;
+namespace app\models;
 
 class Category 	{
 
@@ -13,6 +13,11 @@ class Category 	{
      * @var string
      */
     protected string $name;
+
+    /**
+     * @var string
+     */
+    protected string $description;
 
     /**
      * @return int
@@ -50,7 +55,25 @@ class Category 	{
 		 $this->name = $name; 
 
 		 return $this->self; 
-	 } 
+	 }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     */
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
+        return $this;
+    }
+
 
 
 }
