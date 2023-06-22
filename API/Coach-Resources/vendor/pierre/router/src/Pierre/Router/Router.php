@@ -57,6 +57,28 @@ class Router
     }
 
     /**
+     * Adds a PUT route.
+     *
+     * @param string $uri The URI of the route.
+     * @param object $callable The callable function of the route.
+     */
+    public function put(string $uri, object $callable)
+    {
+        $this->add('PUT',$uri,$callable);
+    }
+
+    /**
+     * Adds a PATCH route.
+     *
+     * @param string $uri The URI of the route.
+     * @param object $callable The callable function of the route.
+     */
+    public function patch(string $uri, object $callable)
+    {
+        $this->add('PATCH',$uri,$callable);
+    }
+
+    /**
      * Adds a DELETE route.
      *
      * @param string $uri The URI of the route.
@@ -68,7 +90,7 @@ class Router
     }
 
     /**
-     * Runs the 1.router.
+     * Runs the router.
     */
     public function run() : void
     {

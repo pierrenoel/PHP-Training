@@ -28,6 +28,7 @@ class Response
      */
     public function execute(array|bool $query, ?array $params): void
     {
+  
         $title = (!empty($params['success_title'])) ? $params['success_title'] : 'message';
         $message = (!empty($params['success_message'])) ? $params['success_message'] : $query;
         $error_message = (!empty($params['error_message'])) ? $params['error_message'] : 'Oops, something is bad';

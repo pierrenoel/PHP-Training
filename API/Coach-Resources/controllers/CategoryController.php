@@ -2,9 +2,6 @@
 
 namespace app\controllers;
 
-use app\helpers\Response;
-use app\helpers\Validation;
-use app\models\Post;
 use app\repositories\CategoryRepository;
 
 class CategoryController extends Controller
@@ -17,14 +14,14 @@ class CategoryController extends Controller
         $this->categoryRepository = new categoryRepository();
     }
 
-    public function index()
+    public function index(): void
     {
         $this->response->execute($this->categoryRepository->findAll(),[
             'success_title' => 'categories'
         ]);
     }
 
-    public function show($id)
+    public function show($id): void
     {
         // Show all the posts linked to this category
         $this->response->execute($this->categoryRepository->getAll('category_id','posts',$id),[

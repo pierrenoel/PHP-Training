@@ -43,7 +43,7 @@ class Category 	{
 	 { 
 		 $this->id = $id; 
 
-		 return $this->self; 
+		 return $this;
 	 }
 
     /**
@@ -54,7 +54,7 @@ class Category 	{
 	 { 
 		 $this->name = $name; 
 
-		 return $this->self; 
+		 return $this;
 	 }
 
     /**
@@ -73,7 +73,4 @@ class Category 	{
         $this->description = $description;
         return $this;
     }
-
-
-
 }

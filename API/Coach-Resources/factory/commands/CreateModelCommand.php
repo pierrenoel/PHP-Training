@@ -21,6 +21,7 @@ class CreateModelCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
+
         $array = [];
 
         $io->title('Process to make a new model');
@@ -60,10 +61,13 @@ class CreateModelCommand extends Command
         }
 
         // Create a new file Model
-        $this->model('models/'.$input->getArgument('name').'.php',$input->getArgument('name'),$array);
+        $this->model('models/'.ucfirst($input->getArgument('name')).'.php',ucfirst($input->getArgument('name')),$array);
 
         // Create a new file repository
-        $this->repository('repositories/'.$input->getArgument('name').'Repository.php',$input->getArgument('name'));
+        $this->repository('repositories/'.ucfirst($input->getArgument('name')).'Repository.php',ucfirst($input->getArgument('name')));
+
+        // Text
+        $io->success("The model and the repository have been created!");
 
         return Command::SUCCESS;
     }
@@ -79,9 +83,9 @@ class CreateModelCommand extends Command
 
         $content .= "<?php " . PHP_EOL;
 
-        $content .= PHP_EOL . "namespace core\\repositories;";
+        $content .= PHP_EOL . "namespace app\\repositories;" . PHP_EOL;
 
-        $content .= PHP_EOL. "use core\database\ORM;" . PHP_EOL;
+        $content .= PHP_EOL. "use app\database\ORM;" . PHP_EOL;
 
         $content .= "class ".$filename."Repository extends ORM";
 
@@ -101,7 +105,7 @@ class CreateModelCommand extends Command
         $content = "";
 
         $file = fopen($path, 'w');
-        $content .= "<?php " . PHP_EOL . PHP_EOL. "namespace core\models;" . PHP_EOL . PHP_EOL . "class $filename \t{" . PHP_EOL . PHP_EOL ;
+        $content .= "<?php " . PHP_EOL . PHP_EOL. "namespace app\models;" . PHP_EOL . PHP_EOL . "class $filename \t{" . PHP_EOL . PHP_EOL ;
 
         // Here we have the attributes
         $content .= $this->attributes($array);
@@ -173,7 +177,7 @@ class CreateModelCommand extends Command
 
             $content .= "\t\t \$this->$valueLc = \$$valueLc; " .PHP_EOL;
 
-            $content .= PHP_EOL . "\t\t return \$this->self; " .PHP_EOL;
+            $content .= PHP_EOL . "\t\t return \$this; " .PHP_EOL;
 
             $content .= "\t } " . PHP_EOL;
 

@@ -17,7 +17,7 @@ $router->post('/post/add',function(){
     (new \app\controllers\PostController())->create();
 });
 
-$router->post('/post/edit/:id',function($id) {
+$router->put('/post/edit/:id',function($id) {
     (new \app\controllers\PostController())->edit($id);
 });
 

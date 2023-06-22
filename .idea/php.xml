@@ -10,6 +10,60 @@
     <option name="highlightLevel" value="WARNING" />
     <option name="transferred" value="true" />
   </component>
+  <component name="PhpIncludePathManager">
+    <include_path>
+      <path value="$PROJECT_DIR$/vendor/php-di/php-di" />
+      <path value="$PROJECT_DIR$/vendor/php-di/invoker" />
+      <path value="$PROJECT_DIR$/vendor/laravel/serializable-closure" />
+      <path value="$PROJECT_DIR$/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/vendor/composer" />
+      <path value="$PROJECT_DIR$/POO/Exercices/User-Registration/Coach-Resources/vendor/composer" />
+      <path value="$PROJECT_DIR$/POO/Exercices/Website/Coach-Resources/vendor/composer" />
+      <path value="$PROJECT_DIR$/POO/Exercices/Roles&amp;Permissions/Coach-Resources/vendor/composer" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/phpunit/php-file-iterator" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/sebastian/object-enumerator" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/phpunit/php-text-template" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/sebastian/cli-parser" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/phpunit/php-invoker" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/sebastian/diff" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/phpunit/php-code-coverage" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/sebastian/lines-of-code" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/phpunit/phpunit" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/sebastian/type" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/sebastian/version" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/sebastian/comparator" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/sebastian/exporter" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/sebastian/environment" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/sebastian/code-unit" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/sebastian/resource-operations" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/theseer/tokenizer" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/sebastian/code-unit-reverse-lookup" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/nikic/php-parser" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/symfony/console" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/symfony/string" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/symfony/service-contracts" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/symfony/polyfill-ctype" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/symfony/polyfill-intl-normalizer" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/symfony/polyfill-php83" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/symfony/polyfill-intl-grapheme" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/symfony/polyfill-php80" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/phar-io/manifest" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/phar-io/version" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/doctrine/instantiator" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/symfony/http-foundation" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/pierre/router" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/myclabs/deep-copy" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/sebastian/global-state" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/sebastian/complexity" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/sebastian/recursion-context" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/phpunit/php-timer" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/composer" />
+      <path value="$PROJECT_DIR$/API/Coach-Resources/vendor/sebastian/object-reflector" />
+    </include_path>
+  </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.0">
     <option name="suggestChangeDefaultLanguageLevel" value="false" />
   </component>
