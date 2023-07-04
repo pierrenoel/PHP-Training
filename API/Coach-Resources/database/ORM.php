@@ -28,7 +28,7 @@ abstract class ORM
      * @param int|null $id
      * @return bool|array
      */
-    public function getOne(string $foreign_key, string $table, ?int $id = null): bool|array
+    public function hasOne(string $foreign_key, string $table, ?int $id = null): bool|array
     {
         $foreign_table = StringHelper::singular($table);
 
@@ -54,7 +54,7 @@ abstract class ORM
      * @param int $id
      * @return bool|array
      */
-    public function getAll(string $foreign_key, string $table, int $id): bool|array
+    public function HasMany(string $foreign_key, string $table, int $id): bool|array
     {
         $stmt = Database::getInstance()->prepare('SELECT * FROM '. $table . ' where '.$foreign_key.' = :id');
         $stmt->bindValue(':id',$id);

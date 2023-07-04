@@ -1,6 +1,5 @@
 <?php
 
-
 function getPost()
 {
     $url = 'https://jsonplaceholder.typicode.com/posts';

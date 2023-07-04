@@ -24,7 +24,7 @@ class CategoryController extends Controller
     public function show($id): void
     {
         // Show all the posts linked to this category
-        $this->response->execute($this->categoryRepository->getAll('category_id','posts',$id),[
+        $this->response->execute($this->categoryRepository->hasMany('category_id','posts',$id),[
             'success_title' => 'posts',
         ]);
     }

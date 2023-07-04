@@ -25,7 +25,7 @@ INTRODUCTION
 
 (Learning through a project)
 
-### DIFFICULT
+### BACKEND
 
 - POO
 - MVC

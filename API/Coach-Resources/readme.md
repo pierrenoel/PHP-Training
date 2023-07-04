@@ -1,5 +1,7 @@
 # How to use the API
 
+## Configuration
+
 ## Factory console
 
 ```bash

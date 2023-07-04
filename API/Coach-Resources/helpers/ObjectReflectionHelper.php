@@ -2,6 +2,8 @@
 
 namespace app\helpers;
 
+use app\models\Post;
+
 class ObjectReflectionHelper
 {
     /**
@@ -47,5 +49,40 @@ class ObjectReflectionHelper
         }
 
         return $postArray;
+    }
+
+    public static function getOrmDoc(string $model): array
+    {
+        $methods = [];
+        $orm = [];
+
+        $model = new $model;
+
+        $reflection = new \ReflectionObject($model);
+        $properties = $reflection->getProperties(\ReflectionProperty::IS_PROTECTED);
+
+        foreach ($properties as $property) {
+
+            $propertyName = $property->getName();
+
+            $getterMethod = "get" . ucfirst($propertyName);
+
+            $methods[] = $getterMethod;
+
+        }
+
+        foreach($methods as $method)
+        {
+            $result = $reflection->getMethod($method)->getDocComment();
+
+            $pattern = '/@orm\s+(.*)/';
+
+            if (preg_match($pattern, $result, $matches)) {
+                $extractedText = $matches[1];
+                $orm[$method] = $extractedText;
+            }
+        }
+
+        return $orm;
     }
 }

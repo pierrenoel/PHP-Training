@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\helpers\ObjectReflectionHelper;
 use app\helpers\Validation;
 use app\models\Post;
 use app\repositories\PostRepository;
@@ -13,9 +14,7 @@ class PostController extends Controller
      */
     protected PostRepository $postRepository;
 
-    /**
-     *
-     */
+
     public function __construct()
     {
         parent::__construct();
@@ -38,7 +37,7 @@ class PostController extends Controller
      */
     public function show(int $id): void
     {
-        $this->response->execute($this->postRepository->getOne('category_id','categories',$id),[
+        $this->response->execute($this->postRepository->hasOne('category_id','categories',$id),[
             'success_title' => 'post',
             'error_message' => 'The post is not found',
             'error_code' => 404

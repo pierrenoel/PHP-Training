@@ -11,4 +11,5 @@ class PostRepository extends ORM
      */
     protected string $table = 'posts';
 
+
 }

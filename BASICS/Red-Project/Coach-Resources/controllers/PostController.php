@@ -6,5 +6,4 @@
 
 require 'database/posts.php';
 
-
 require 'views/posts.php';

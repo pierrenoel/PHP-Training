@@ -36,26 +36,27 @@ class Response
 
         if($query)
         {
-            http_response_code(200);
-
             $this->response->setContent(json_encode([
                 'response_code' => 200,
                 $title => $message
             ]));
+
+            http_response_code(200);
         }
         else
         {
-            http_response_code($error_code);
-
             $this->response->setContent(json_encode([
                 'response_code' => $error_code,
                 'message' => $error_message
             ]));
+
+            http_response_code($error_code);
+
         }
 
         $this->response->headers->set('Content-Type', 'application/json');
 
-        echo $this->response;
+        echo $this->response->getContent();
     }
 
     /**
@@ -74,7 +75,7 @@ class Response
 
         $this->response->headers->set('Content-Type', 'application/json');
 
-        echo $this->response;
+        echo $this->response->getContent();
     }
 }
 

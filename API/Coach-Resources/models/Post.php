@@ -24,6 +24,7 @@ class Post
 
     /**
      * @return string
+     * @orm varchar(255)
      */
     public function getTitle(): string
     {
@@ -41,6 +42,7 @@ class Post
 
     /**
      * @return string
+     * @orm varchar(255)
      */
     public function getExcerpt(): string
     {
@@ -58,6 +60,7 @@ class Post
 
     /**
      * @return string
+     * @orm text
      */
     public function getBody(): string
     {
@@ -75,6 +78,7 @@ class Post
 
     /**
      * @return int
+     * @orm int
      */
     public function getCategory_id() : int
     {

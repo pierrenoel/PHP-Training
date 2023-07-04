@@ -1,5 +1,7 @@
 <?php
 
+header("Access-Control-Allow-Origin: *");
+
 require_once './vendor/autoload.php';
 
 function app(string $name)
@@ -9,5 +11,3 @@ function app(string $name)
 }
 
 require_once 'routes.php';
-
-

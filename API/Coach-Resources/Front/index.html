@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+    <main>
+        <h1>Tous les articles</h1>
+        <div class="categories"></div>
+        <div class="posts"></div>
+    </main>
+
+    <script>
+        let url_categories = "http://localhost:8000/categories"
+        let url_posts = "http://localhost:8000/posts"
+        let categories = document.querySelector(".categories")
+        let posts = document.querySelector(".posts")
+
+        fetch(url_categories)
+            .then((response) => response.json())
+            .then((data) => {
+                data.categories.forEach((category) => {
+
+                    let category_name = document.createElement("p")
+                    category_name.innerText = category.name
+
+                    categories.appendChild(category_name)
+                })
+            })
+
+        fetch(url_posts)
+            .then((response) => response.json())
+            .then((data) => {
+
+                console.table(data)
+
+                data.posts.forEach((post) => {
+                    let post_card = document.createElement("div")
+                    let post_title = document.createElement("h2")
+                    let post_excerpt = document.createElement("p")
+
+                    // title
+                    post_title.innerText = post.title
+
+                    // Excerpt
+                    post_excerpt.innerText = post.excerpt
+
+                    // title to div
+                    post_card.appendChild(post_title)
+                    post_card.appendChild(post_excerpt)
+                    posts.appendChild(post_card)
+                })
+            })
+
+    </script>
+</body>
+</html>
